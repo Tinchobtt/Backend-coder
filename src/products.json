@@ -1,0 +1,92 @@
+[
+    {
+        "title": "Ferrari",
+        "description": "Superauto",
+        "price": 200000,
+        "code": "F711dr66",
+        "stock": 6,
+        "thumbnail": "imgFerrari",
+        "id": 1
+    },
+    {
+        "title": "Alfa Romeo",
+        "description": "Deportivo",
+        "price": 18000,
+        "code": "ARJ11R8",
+        "stock": 32,
+        "thumbnail": "imgAlfaRomeo",
+        "id": 2
+    },
+    {
+        "title": "Audi",
+        "description": "Deportivo",
+        "price": 20000,
+        "code": "AR8S7TT",
+        "stock": 12,
+        "thumbnail": "imgAudi",
+        "id": 3
+    },
+    {
+        "title": "Renault",
+        "description": "Urbano",
+        "price": 6000,
+        "code": "RT558HD",
+        "stock": 20,
+        "thumbnail": "imgRenault",
+        "id": 4
+    },
+    {
+        "title": "BMW",
+        "description": "Deportivo",
+        "price": 35000,
+        "code": "BM255KLL",
+        "stock": 15,
+        "thumbnail": "imgBMW",
+        "id": 5
+    },
+    {
+        "title": "Toyota",
+        "description": "Urbano",
+        "price": 18000,
+        "code": "TY912MN",
+        "stock": 25,
+        "thumbnail": "imgToyota",
+        "id": 6
+    },
+    {
+        "title": "Mercedes-Benz",
+        "description": "Deportivo",
+        "price": 45000,
+        "code": "MB812XX",
+        "stock": 8,
+        "thumbnail": "imgMercedes",
+        "id": 7
+    },
+    {
+        "title": "Chevrolet",
+        "description": "urbano",
+        "price": 22000,
+        "code": "CHV89ZZ",
+        "stock": 18,
+        "thumbnail": "imgChevrolet",
+        "id": 8
+    },
+    {
+        "title": "Ford",
+        "description": "urbano",
+        "price": 19000,
+        "code": "FD125AB",
+        "stock": 20,
+        "thumbnail": "imgFord",
+        "id": 9
+    },
+    {
+        "title": "Koenigsegg",
+        "description": "Superauto",
+        "price": 2500000,
+        "code": "KOE992TR",
+        "stock": 3,
+        "thumbnail": "imgKoenigsegg",
+        "id": 10
+    }
+]

@@ -1,6 +1,6 @@
 import { promises as fs} from 'fs';
 
-class ProductManager{
+export class ProductManager{
     constructor(path){
         this.path = path;
     }
@@ -122,37 +122,34 @@ class Product {
     }
 }
 
-const pm = new ProductManager('./products.json');
+// const pm = new ProductManager('./products.json');
+
 
 //TESTS
-((async ()=>{
+// ((async ()=>{
 
-    //Se agregan dos autos diferentes
-    await pm.addProduct(new Product('Ferrari', 'Superauto', 200000, 'F711dr66', 6, 'imgFerrari'));
-    await pm.addProduct(new Product('Audi', 'Deportivo', 20000, 'AR8S7TT', 12, 'imgAudi'));
+//     //Se agregan dos autos diferentes
+//     await pm.addProduct(new Product('Ferrari', 'Superauto', 200000, 'F711dr66', 6, 'imgFerrari'));
+//     await pm.addProduct(new Product('Audi', 'Deportivo', 20000, 'AR8S7TT', 12, 'imgAudi'));
 
-    //Se agrega un auto con un code igual al anteriro
-    await pm.addProduct(new Product('Renault', 'Urbano', 6000, 'AR8S7TT', 20, 'imgRenault'));
+//     //Se agrega un auto con un code igual al anteriro
+//     await pm.addProduct(new Product('Renault', 'Urbano', 6000, 'AR8S7TT', 20, 'imgRenault'));
     
-    //Se agrega un auto con propiedades faltantes
-    await pm.addProduct(new Product('Chevrolet', '', 8000, 'CH55YL1', 18, 'imgChevrolet'));
+//     //Se agrega un auto con propiedades faltantes
+//     await pm.addProduct(new Product('Chevrolet', '', 8000, 'CH55YL1', 18, 'imgChevrolet'));
     
-    //Se busca un auto existente
-    await pm.getProductById(1)
+//     //Se busca un auto existente
+//     await pm.getProductById(1)
     
-    //Se busca un auto no existente
-    await pm.getProductById(7)
+//     //Se busca un auto no existente
+//     await pm.getProductById(7)
     
-    //Se actualiza un producto
-    await pm.updateProduct(2, {title: 'Alfa Romeo', description: 'Deportivo', price: 18000, code: 'ARJ11R8', stock: 32, thumbnail: 'imgAlfaRomeo'})
+//     //Se actualiza un producto
+//     await pm.updateProduct(2, {title: 'Alfa Romeo', description: 'Deportivo', price: 18000, code: 'ARJ11R8', stock: 32, thumbnail: 'imgAlfaRomeo'})
 
-    //Se agrega un auto nuevo
-    await pm.addProduct(new Product('Mclaren', 'Superauto', 280000, 'MC74YY1', 7, 'imgMclaren'));
+//     //Se agrega un auto nuevo
+//     await pm.addProduct(new Product('Mclaren', 'Superauto', 280000, 'MC74YY1', 7, 'imgMclaren'));
 
-    //Se elimina un auto
-    await pm.deleteProduct(5)
-
-}))()
-
-
-
+//     //Se elimina un auto
+//     await pm.deleteProduct(5)
+// }))()
