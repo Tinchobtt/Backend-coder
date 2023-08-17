@@ -1,33 +1,28 @@
-import { promises as fs} from 'fs';
+import { promises as fs } from 'fs';
 
 export class ProductManager{
     constructor(path){
         this.path = path;
     }
 
-    async addProduct(product){
-
-        const products = await this.getProducts();
-        let producto = products.find( prod => prod.id === +product.id);
+    async addProduct({title, description, price, code, stock, category, thumbnail}){
+        let product = new Product(title, description, price, code, stock, category, thumbnail)
+        
+        //ID Asignation
+        const products = await this.getProducts()
+        let nextId = products.length ? products[products.length - 1].id + 1 : 1;
+        product.id = nextId;
 
         //Validations
         if(!this.requiredFields(product)){
-            console.log('- Faltan datos del producto.\n');
-            return;
+            return '- Faltan datos del producto.';
         }
-        if(this.repetedCode(product.code, products)){
-            console.log(`- Ya existe un producto con este codigo: ${product.code}.\n`);
-            return;
+        if(await this.getProductByCode(code)){
+            return '- El producto ya existe.';
         }
 
-
-        if(producto){
-            console.log('- Ya existe este producto.\n');
-        }else{
-            products.push(product)
-            await fs.writeFile(this.path, JSON.stringify(products, null, 4))
-            console.log('- Porducto agregado existosamente.\n');
-        }
+        products.push(product)
+        await fs.writeFile(this.path, JSON.stringify(products, null, 4))
     }
 
     async getProducts(){
@@ -41,26 +36,24 @@ export class ProductManager{
     async getProductById(id){
         const products = await this.getProducts();
         let product = products.find( prod => prod.id === +id)
+        return product;
+    }
 
-        if(product){
-            console.log(product)
-        }else{
-            console.log('Producto no encontrado')
-        }
+    async getProductByCode(code){
+        const products = await this.getProducts();
+        let product = products.find( prod => prod.code === code)
         return product;
     }
 
     async updateProduct(id, product){
         const products = await this.getProducts();
         let index = products.findIndex( prod => prod.id === +id)
-        console.log(product)
+        
         if(!this.requiredFields(product)){
-            console.log('- Faltan datos del nuevo producto.\n');
-            return;
+            return '- Faltan datos del nuevo producto.';
         }
-        if(this.repetedCode(product.code, products)){
-            console.log(`- Ya existe un producto con este codigo: ${product.code}.\n`);
-            return;
+        if(await this.codeRepeted(id, product.code)){
+            return `- Ya existe un producto con este codigo: ${product.code}.`;
         }
 
         if(index != -1){
@@ -69,87 +62,90 @@ export class ProductManager{
             products[index].price = product.price;
             products[index].code = product.code;
             products[index].stock = product.stock;
+            products[index].category = product.category;
+            products[index].status = product.status;
             products[index].thumbnail = product.thumbnail;
             await fs.writeFile(this.path, JSON.stringify(products, null, 4))
-            console.log('- Producto actualizado.\n')
+            return products[index]
         }else{
-            console.log('- Producto no encontrado.\n')
+            return '- No se encontro el producto.'
         }
     }
 
     async deleteProduct(id){
         const products = await this.getProducts();
-        let product = products.find( prod => prod.id === id);
+        let product = products.find( prod => prod.id === +id);
         
         if(product){
             let newProducts = products.filter( prod => prod.id !== +id)
-            await fs.writeFile(this.path, JSON.stringify(newProducts, null, 4))
-            console.log('- Producto eliminado.\n')
+            return await fs.writeFile(this.path, JSON.stringify(newProducts, null, 4))
         }else{
-            console.log('- Producto no encontrado.\n')
+            return '- Producto no encontrado.'
         }
     }
 
     //Validations
-    requiredFields ({title, description, price, thumbnail, code, stock}){
-        if(title && description && price && thumbnail && code && stock){
+    requiredFields ({title, description, price, code, stock, category}){
+        if(title && description && price && code && stock && category){
             return true
         }
         return false
     }
-    repetedCode(code, products){
-        return products.some( item => item.code === code);
-    }
+    async codeRepeted(id, code){
+        const products = await this.getProducts();
+        return products.some( prod => prod.code === code && prod.id !== id)
+    } 
 }
 
 class Product {
-    constructor(title, description, price, code, stock, thumbnail) {
+    constructor(title, description, price, code, stock, category, thumbnail, status=true) {
         this.title = title
         this.description = description
         this.price = price
         this.code = code
         this.stock = stock
+        this.category = category
+        this.status = status
         this.thumbnail = thumbnail
-        this.id = Product.incrementarId()
+        // this.id = Product.incrementarId()
     }
-    static incrementarId() {
-        if(this.idIncrement){
-            this.idIncrement++;
-        }else{
-            this.idIncrement = 1
-        }
-        return this.idIncrement;
-    }
+    // static incrementarId() {
+    //     if(this.idIncrement){
+    //         this.idIncrement++;
+    //     }else{
+    //         this.idIncrement = 1
+    //     }
+    //     return this.idIncrement;
+    // }
 }
 
-// const pm = new ProductManager('./products.json');
-
+// const pm = new ProductManager('./src/products.json');
 
 //TESTS
 // ((async ()=>{
 
-//     //Se agregan dos autos diferentes
-//     await pm.addProduct(new Product('Ferrari', 'Superauto', 200000, 'F711dr66', 6, 'imgFerrari'));
-//     await pm.addProduct(new Product('Audi', 'Deportivo', 20000, 'AR8S7TT', 12, 'imgAudi'));
+    //Se agregan dos autos diferentes
+    // await pm.addProduct({title:'Ferrari', description: 'Superauto', price: 200000, code:'F711dr66', stock: 6, category: 'superauto', thumbnail: 'imgFerrari'});
+    // await pm.addProduct({title:'Audi', description: 'deportivo', price: 20000, code:'AR8GH55', stock: 6, category: 'deportivo', thumbnail: 'imgAudi'});
 
-//     //Se agrega un auto con un code igual al anteriro
-//     await pm.addProduct(new Product('Renault', 'Urbano', 6000, 'AR8S7TT', 20, 'imgRenault'));
+    //Se agrega un auto con un code igual al anteriro
+    // await pm.addProduct(new Product('Renault', 'Urbano', 6000, 'AR8S7TT', 20, 'imgRenault'));
     
-//     //Se agrega un auto con propiedades faltantes
-//     await pm.addProduct(new Product('Chevrolet', '', 8000, 'CH55YL1', 18, 'imgChevrolet'));
+    // //Se agrega un auto con propiedades faltantes
+    // await pm.addProduct(new Product('Chevrolet', '', 8000, 'CH55YL1', 18, 'imgChevrolet'));
     
-//     //Se busca un auto existente
-//     await pm.getProductById(1)
+    // //Se busca un auto existente
+    // await pm.getProductById(1)
     
-//     //Se busca un auto no existente
-//     await pm.getProductById(7)
+    // //Se busca un auto no existente
+    // await pm.getProductById(7)
     
-//     //Se actualiza un producto
-//     await pm.updateProduct(2, {title: 'Alfa Romeo', description: 'Deportivo', price: 18000, code: 'ARJ11R8', stock: 32, thumbnail: 'imgAlfaRomeo'})
+    // //Se actualiza un producto
+    // await pm.updateProduct(2, {title: 'Alfa Romeo', description: 'Deportivo', price: 18000, code: 'ARJ11R8', stock: 32, thumbnail: 'imgAlfaRomeo'})
 
-//     //Se agrega un auto nuevo
-//     await pm.addProduct(new Product('Mclaren', 'Superauto', 280000, 'MC74YY1', 7, 'imgMclaren'));
+    // //Se agrega un auto nuevo
+    // await pm.addProduct(new Product('Mclaren', 'Superauto', 280000, 'MC74YY1', 7, 'imgMclaren'));
 
-//     //Se elimina un auto
-//     await pm.deleteProduct(5)
+    // //Se elimina un auto
+    // await pm.deleteProduct(5)
 // }))()

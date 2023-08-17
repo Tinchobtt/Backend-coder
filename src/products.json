@@ -88,5 +88,16 @@
         "stock": 3,
         "thumbnail": "imgKoenigsegg",
         "id": 10
+    },
+    {
+        "title": "Fiat 600",
+        "description": "Un fiat 600",
+        "price": 2000,
+        "code": "F600FN1",
+        "stock": 38,
+        "category": "urbano",
+        "status": true,
+        "thumbnail": "imgFiat",
+        "id": 11
     }
 ]
