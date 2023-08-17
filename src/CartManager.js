@@ -8,7 +8,7 @@ export class CartManager{
     async createCart(){
         const cart = new Cart();
         const carts = await this.getCarts();
-        const nextId = carts.length ? carts[carts.length - 1].id + 1 : 1;
+        let nextId = products.length ? Math.max(...products.map(prod => prod.id)) + 1 : 1;
         cart.id = nextId;
         carts.push(cart)
         await fs.writeFile(this.path, JSON.stringify(carts, null, 4))

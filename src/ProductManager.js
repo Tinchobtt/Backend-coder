@@ -10,7 +10,7 @@ export class ProductManager{
         
         //ID Asignation
         const products = await this.getProducts()
-        let nextId = products.length ? products[products.length - 1].id + 1 : 1;
+        let nextId = products.length ? Math.max(...products.map(prod => prod.id)) + 1 : 1;
         product.id = nextId;
 
         //Validations
@@ -18,7 +18,7 @@ export class ProductManager{
             return '- Faltan datos del producto.';
         }
         if(await this.getProductByCode(code)){
-            return '- El producto ya existe.';
+            return `- Ya existe un porducto con este codigo: ${code}`;
         }
 
         products.push(product)
