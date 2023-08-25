@@ -6,12 +6,14 @@ import viewsRouter from './routes/views.routes.js';
 import { __dirname } from './path.js';
 import { engine } from 'express-handlebars';
 import { Server } from 'socket.io';
+import { ProductManager } from './ProductManager.js';
+import chalk from 'chalk';
 
 const PORT = 8080;
 const app = express()
 
 const server = app.listen(PORT, ()=>{
-    console.log(`Server on port ${PORT}`)
+    console.log(`Server running on PORT: ${PORT}\n${chalk.yellow(`http://localhost:${PORT}/static/home`)}`);
 })
 
 //Middlewares
@@ -25,12 +27,19 @@ app.set('view engine', 'handlebars') //Setting de mi app de hanblebars
 app.set('views', path.resolve(__dirname, './views')) //Rutas absolutas a traves de rutas relativas
 
 //Server Socket.io
-const io = new Server(server)
+const io = new Server(server);
+const pm = new ProductManager('./src/products.json');
 
 io.on('connection', (socket)=>{
-    console.log('Socket.io Server On!')
-    socket.on('mensaje', (info)=>{
-        console.log(info)
+    console.log('Socket.io Server Up!')
+    socket.on('newProduct', async (newProduct)=>{
+        let product = await pm.addProduct(newProduct)
+        let products = await pm.getProducts();
+        socket.emit('products', products, product)
+    })
+    socket.on('deleteProduct', async (id)=>{
+        let confirm = await pm.deleteProduct(id);
+        socket.emit('productDeleted', confirm)
     })
 })
 

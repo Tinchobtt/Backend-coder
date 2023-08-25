@@ -130,5 +130,15 @@
         "status": true,
         "thumbnail": "imgPeugeot",
         "id": 12
+    },
+    {
+        "title": "Honda",
+        "description": "Civic",
+        "price": "4000",
+        "code": "HC99RTX",
+        "stock": "27",
+        "category": "urbano",
+        "status": true,
+        "id": 13
     }
 ]

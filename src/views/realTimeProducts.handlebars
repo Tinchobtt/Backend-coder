@@ -1,18 +1,29 @@
-<h1>Real time Products</h1>
-<form>
-    <label for="title"></label>
-    <input type="text" name="title" class="input">
-    <label for="description"></label>
-    <input type="text" name="description" class="input">
-    <label for="price"></label>
-    <input type="number" name="price" class="input">
-    <label for="code"></label>
-    <input type="text" name="code" class="input">
-    <label for="stock"></label>
-    <input type="number" name="stock" class="input">
-    <label for="category"></label>
-    <input type="text" name="category" class="input">
-    <label for="imagen"></label>
-    <input type="file" name="imagen" class="input">
-    <input type="submit" value="Subir Product">
-</form>
+<h1 class="title">Real time Products</h1>
+<div class="products-admin">
+    <div class="product-form">
+        <h3 class="sub-title">Add product</h3>
+        <form id="form">
+            <label for="title">Title</label>
+            <input type="text" name="title" class="input" required>
+            <label for="description">Description</label>
+            <input type="text" name="description" class="input" required>
+            <label for="price">Price</label>
+            <input type="number" name="price" class="input" required>
+            <label for="code">Code</label>
+            <input type="text" name="code" class="input" required>
+            <label for="stock">Stock</label>
+            <input type="number" name="stock" class="input" required>
+            <label for="category">Category</label>
+            <input type="text" name="category" class="input" required>
+            <label for="imagen">Imagen</label>
+            <input type="file" name="imagen" class="input">
+            <input type="submit" value="Upload Producto" class="input-submit">
+        </form>
+    </div>
+    <div class="active-products">
+        <h3 class="sub-title">Products</h3>
+        <div class="active-products-container">
+           
+        </div>
+    </div>
+</div>

@@ -15,14 +15,15 @@ export class ProductManager{
 
         //Validations
         if(!this.requiredFields(product)){
-            return '- Faltan datos del producto.';
+            return 'Faltan datos del producto.';
         }
         if(await this.getProductByCode(code)){
-            return `- Ya existe un porducto con este codigo: ${code}`;
+            return `Ya existe un porducto con este codigo: ${code}`;
         }
 
         products.push(product)
         await fs.writeFile(this.path, JSON.stringify(products, null, 4))
+        return product
     }
 
     async getProducts(){
@@ -50,10 +51,10 @@ export class ProductManager{
         let index = products.findIndex( prod => prod.id === +id)
         
         if(!this.requiredFields(product)){
-            return '- Faltan datos del nuevo producto.';
+            return 'Faltan datos del nuevo producto.';
         }
         if(await this.codeRepeted(id, product.code)){
-            return `- Ya existe un producto con este codigo: ${product.code}.`;
+            return `Ya existe un producto con este codigo: ${product.code}.`;
         }
 
         if(index != -1){
@@ -68,7 +69,7 @@ export class ProductManager{
             await fs.writeFile(this.path, JSON.stringify(products, null, 4))
             return products[index]
         }else{
-            return '- No se encontro el producto.'
+            return 'No se encontro el producto.'
         }
     }
 
@@ -80,7 +81,7 @@ export class ProductManager{
             let newProducts = products.filter( prod => prod.id !== +id)
             return await fs.writeFile(this.path, JSON.stringify(newProducts, null, 4))
         }else{
-            return '- Producto no encontrado.'
+            return 'Producto no encontrado.'
         }
     }
 
@@ -107,16 +108,7 @@ class Product {
         this.category = category
         this.status = status
         this.thumbnail = thumbnail
-        // this.id = Product.incrementarId()
     }
-    // static incrementarId() {
-    //     if(this.idIncrement){
-    //         this.idIncrement++;
-    //     }else{
-    //         this.idIncrement = 1
-    //     }
-    //     return this.idIncrement;
-    // }
 }
 
 // const pm = new ProductManager('./src/products.json');
