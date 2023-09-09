@@ -1,14 +1,10 @@
 import { Router } from "express";
-import { ProductManager } from '../ProductManager.js';
+import { productModel } from "../models/product.models.js";
 
 const viewsRouter = Router()
-const pm = new ProductManager('./src/products.json')
 
 viewsRouter.get('/home', async (req, res)=>{
-    const prods = await pm.getProducts()
-    const products = prods.map(prod => {
-        return {...prod, price: prod.price.toLocaleString('es-AR', { style: 'currency', currency: 'ARS', minimumFractionDigits: 0, maximumFractionDigits: 0 })}
-    })
+    const products = await productModel.find().lean();
     res.render('home', {
         products,
         script: ''
@@ -17,6 +13,11 @@ viewsRouter.get('/home', async (req, res)=>{
 viewsRouter.get('/realTimeProducts', (req, res)=>{
     res.render('realTimeProducts',{
         script: "js/index.js"
+    })
+})
+viewsRouter.get('/chat', async (req, res)=>{
+    res.render('chat', {
+        script: "js/chat.js"
     })
 })
 

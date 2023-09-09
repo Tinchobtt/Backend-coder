@@ -113,6 +113,27 @@ label{
     margin-bottom: 1rem;
     color: #fff;
 }
+
+.chat{
+    padding: 1rem;
+    color: #fff;
+}
+.chat-container{
+    margin: 2rem 1rem;
+}
+.chat-container p{
+    color: #fff;
+}
+.chat-controls{
+    
+}
+.chat-input{
+
+}
+.send-btn{
+
+}
+
 @media (max-width: 425px){
     body{
         height: auto;

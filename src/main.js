@@ -6,11 +6,18 @@ import viewsRouter from './routes/views.routes.js';
 import { __dirname } from './path.js';
 import { engine } from 'express-handlebars';
 import { Server } from 'socket.io';
-import { ProductManager } from './ProductManager.js';
+import mongoose from 'mongoose';
 import chalk from 'chalk';
+import { productModel } from './models/product.models.js';
+import { messageModel } from './models/message.models.js';
+import messagesRouter from './routes/messages.routes.js';
 
 const PORT = 8080;
 const app = express()
+
+mongoose.connect('mongodb+srv://martinbtt:<password>@cluster0.enkcdiq.mongodb.net/?retryWrites=true&w=majority')
+.then(()=>{ console.log('DB Connected') })
+.catch((error)=>{ console.log(error) })
 
 const server = app.listen(PORT, ()=>{
     console.log(`Server running on PORT: ${PORT}\n${chalk.yellow(`http://localhost:${PORT}/static/home`)}`);
@@ -28,22 +35,27 @@ app.set('views', path.resolve(__dirname, './views')) //Rutas absolutas a traves 
 
 //Server Socket.io
 const io = new Server(server);
-const pm = new ProductManager('./src/products.json');
 
 io.on('connection', (socket)=>{
     console.log('Socket.io Server Up!')
     socket.on('newProduct', async (newProduct)=>{
-        let product = await pm.addProduct(newProduct)
-        let products = await pm.getProducts();
-        socket.emit('products', products, product)
+        const product = await productModel.create(newProduct)
+        socket.emit('products', product)
     })
     socket.on('deleteProduct', async (id)=>{
-        let confirm = await pm.deleteProduct(id);
+        const confirm = await productModel.findByIdAndDelete(id)
         socket.emit('productDeleted', confirm)
+    })
+    socket.on('message', async (newMessage)=>{
+        await messageModel.create(newMessage)
+        const messages = await messageModel.find();
+        socket.emit('messages', messages)
+        console.log(messages)
     })
 })
 
 //ROUTES
 app.use('/api/products', productsRouter)
 app.use('/api/carts', cartRouter)
+app.use('/messages', messagesRouter)
 app.use('/static', viewsRouter)

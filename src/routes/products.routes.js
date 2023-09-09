@@ -1,78 +1,72 @@
 import { Router } from 'express'
-import { ProductManager } from '../ProductManager.js';
+import { productModel } from '../models/product.models.js'
 
 const productsRouter = Router()
-const pm = new ProductManager('./src/products.json')
 
-productsRouter.get('/', async (req, res)=>{
-    const { limit } = req.query
-    try {
-        const products = await pm.getProducts()
-        if(limit){
-            let productsLimit = products.slice(0, limit)
-            res.status(200).send(productsLimit);
-        }else{
-            res.status(200).send(products);
-        }
-    } catch (error) {
-        res.status(500).send('Error interno del servidor');
+productsRouter.get('/', async (req, res) =>{
+    const { limit } = req.query;
+    try{
+        const products = await productModel.find().limit(limit);
+        res.status(200).send({response: 'ok', message: products})
+    }catch(error){
+        res.status(404).send({response: 'error', message: error})
     }
 })
 
-productsRouter.get('/:id', async (req, res)=>{
-    const id = parseInt(req.params.id);
-    try {
-        const product = await pm.getProductById(id)
+productsRouter.get('/:id', async (req, res) =>{
+    const id = req.params.id;
+    try{
+        const product = await productModel.findById(id);
         if(product){
-            res.status(200).send(product);
+            res.status(200).send({response: 'ok', message: product})
         }else{
-            res.status(404).send('- El producto no existe');
+            res.status(404).send({response: 'error', message: 'Not Found'})
         }
-    } catch (error) {
-        res.status(500).send('Error interno del servidor');
+    }catch(error){
+        res.status(400).send({response: 'error', message: error})
     }
 })
 
-productsRouter.post('/', async (req, res)=>{
-    try {
-        const result = await pm.addProduct(req.body)
-
-        if(typeof(result) === 'string'){
-            res.status(400).send(result);
+productsRouter.post('/', async (req, res) =>{
+    const { title, description, price, code, stock, category } = req.body;
+    try{
+        const product = await productModel.create({ title, description, price, code, stock, category })
+        if(product){
+            res.status(200).send({response: 'ok', message: 'Product created'})
         }else{
-            res.status(200).send('- Producto agregado exitosamente.');
+            res.status(404).send({response: 'error', message: 'Not Found'})
         }
-    } catch (error) {
-        res.status(500).send('Error interno del servidor');
+    }catch(error){
+        res.status(400).send({response: 'Error trying to create the product', message: error})
     }
 })
 
-productsRouter.put('/:id', async (req, res)=>{
-    const id = parseInt(req.params.id);
-    try {
-        const result = await pm.updateProduct(id, req.body)
-        if(typeof(result) === 'string'){
-            res.status(400).send(result);
+productsRouter.put('/:id', async (req, res) =>{
+    const { id } = req.params;
+    const { title, description, price, code, stock, category, status } = req.body;
+    try{
+        const product = await productModel.findByIdAndUpdate(id, {title, description, price, code, stock, category, status})
+        if(product){
+            res.status(200).send({response: 'ok', message: 'Product updated'})
         }else{
-            res.status(200).send('- Producto actualizado exitosamente.');
+            res.status(404).send({response: 'error', message: 'Not Found'})
         }
-    } catch (error) {
-        res.status(500).send('Error interno del servidor');
+    }catch(error){
+        res.status(400).send({response: 'Error trying to update the product', message: error})
     }
 })
 
-productsRouter.delete('/:id', async (req, res)=>{
-    const id = parseInt(req.params.id);
-    try {
-        const result = await pm.deleteProduct(id)
-
-        if(typeof(result) === 'string'){
-            res.status(404).send(result);
+productsRouter.delete('/:id', async (req, res) =>{
+    const id = req.params.id;
+    try{
+        const product = await productModel.findByIdAndDelete(id)
+        if(product){
+            res.status(200).send({response: 'ok', message: 'Product deleted'})
         }else{
-            res.status(200).send('- Producto eliminado exitosamente.');
+            res.status(404).send({response: 'error', message: 'Not Found'})
         }
-    } catch (error) {
-        res.status(500).send('Error interno del servidor');
+    }catch(error){
+        res.status(400).send({response: 'Error trying to delete the product', message: error})
     }
 })
 

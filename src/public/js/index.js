@@ -4,11 +4,11 @@ const form = document.querySelector('#form');
 const productsContainer = document.querySelector('.active-products-container');
 const uploadBtn = document.querySelector('#upload-btn');
 
-const getProductsFetch =  ()=>{
+const getProductsFetch = ()=>{
     fetch('/api/products/')
     .then(res => res.json())
     .then(data => {
-        const reverseData = data.reverse()
+        const reverseData = data.message.reverse();
         let products = '';
         reverseData.forEach(prod => {
             products += `
@@ -21,10 +21,9 @@ const getProductsFetch =  ()=>{
                 <p><strong>Category:</strong> ${prod.category}</p>
                 <p><strong>Status:</strong> ${prod.status}</p>
                 <p><strong>Img:</strong> ${prod.thumbnail && 'img-' + prod.title}</p>
-                <p><strong>ID:</strong> ${prod.id}</p>
-                <button class="delete-btn" onClick=deleteBtn(${prod.id})>Delete</button>
-            </div>
-            `
+                <p><strong>ID:</strong> ${prod._id}</p>
+                <button class="delete-btn" onClick="deleteBtn('${prod._id}')">Delete</button>
+            </div>`
         });
         productsContainer.innerHTML = products
     })
@@ -51,34 +50,30 @@ const deleteBtn = (id)=>{
         reverseButtons: true
     }).then((result) => {
         if (result.isConfirmed) {
+            console.log(id)
             socket.emit('deleteProduct', id)
-            socket.on('productDeleted', confirm);
-            if(typeof(confirm) === 'string'){
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: product
-                })
-            }else{
-                getProductsFetch()
-                Swal.fire(
-                    'Deleted!',
-                    'Your product has been deleted.',
-                    'success'
-                )
-            }
+            socket.on('productDeleted', async (confirm)=>{
+                if(confirm){
+                    getProductsFetch()
+                    Swal.fire(
+                        'Deleted!',
+                        'Your product has been deleted.',
+                        'success'
+                    )
+                }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'The product could not be deleted.'
+                    })
+                }
+            });
         }
     })
 }
 
-socket.on('products', (products, product)=>{
-    if(typeof(product) === 'string'){
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: product
-        })
-    }else{
+socket.on('products', (product)=>{
+    if(product){
         Swal.fire({
             position: 'center center',
             icon: 'success',
@@ -87,5 +82,11 @@ socket.on('products', (products, product)=>{
             timer: 1500
         })
         getProductsFetch()
+    }else{
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'The product could not be added.'
+        })
     }
 })
