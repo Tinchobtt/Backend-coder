@@ -4,9 +4,11 @@ import { productModel } from '../models/product.models.js'
 const productsRouter = Router()
 
 productsRouter.get('/', async (req, res) =>{
-    const { limit } = req.query;
+    const { limit, page, sort, query } = req.query;
     try{
-        const products = await productModel.find().limit(limit);
+        // const products = await productModel.find().limit(limit);
+        const options = {limit: limit || 10, page: page || 1, sort: { price: sort ?? sort}}
+        const products = await productModel.paginate(query || {}, options)
         res.status(200).send({response: 'ok', message: products})
     }catch(error){
         res.status(404).send({response: 'error', message: error})
@@ -34,7 +36,7 @@ productsRouter.post('/', async (req, res) =>{
         if(product){
             res.status(200).send({response: 'ok', message: 'Product created'})
         }else{
-            res.status(404).send({response: 'error', message: 'Not Found'})
+            res.status(400).send({response: 'error', message: 'Not Found'})
         }
     }catch(error){
         res.status(400).send({response: 'Error trying to create the product', message: error})

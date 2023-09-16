@@ -1,22 +1,24 @@
+import 'dotenv/config'
 import express from 'express'
 import path from 'path'
 import productsRouter from './routes/products.routes.js';
 import cartRouter from './routes/cart.routes.js';
 import viewsRouter from './routes/views.routes.js';
+import messagesRouter from './routes/messages.routes.js';
 import { __dirname } from './path.js';
 import { engine } from 'express-handlebars';
 import { Server } from 'socket.io';
 import mongoose from 'mongoose';
 import chalk from 'chalk';
+//Para socket.io
 import { productModel } from './models/product.models.js';
 import { messageModel } from './models/message.models.js';
-import messagesRouter from './routes/messages.routes.js';
 
 const PORT = 8080;
 const app = express()
 
-mongoose.connect('mongodb+srv://martinbtt:<password>@cluster0.enkcdiq.mongodb.net/?retryWrites=true&w=majority')
-.then(()=>{ console.log('DB Connected') })
+mongoose.connect(process.env.MONGO_URL)
+.then( async ()=>{ console.log('DB Connected') })
 .catch((error)=>{ console.log(error) })
 
 const server = app.listen(PORT, ()=>{
