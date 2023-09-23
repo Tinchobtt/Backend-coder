@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+import paginate from 'mongoose-paginate-v2'
 
 const userSchema = new Schema({
     name: {
@@ -7,6 +8,7 @@ const userSchema = new Schema({
     },
     surname: {
         type: String,
+        index: true,
         required: true
     },
     age: {
@@ -21,7 +23,13 @@ const userSchema = new Schema({
     password: {
         type: String,
         required: true
+    },
+    rol: {
+        type: String,
+        default: 'user'
     }
 })
+
+userSchema.plugin(paginate) //Implementar el metodo paginate en el schema
 
 export const userModel = model('users', userSchema)

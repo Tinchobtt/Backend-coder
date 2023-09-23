@@ -25,6 +25,7 @@ const productSchema = new Schema({
     },
     category: {
         type: String,
+        index: true,
         required: true
     },
     status: {

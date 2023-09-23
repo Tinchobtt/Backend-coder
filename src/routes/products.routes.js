@@ -4,11 +4,18 @@ import { productModel } from '../models/product.models.js'
 const productsRouter = Router()
 
 productsRouter.get('/', async (req, res) =>{
-    const { limit, page, sort, query } = req.query;
+    const { limit, page, sort, category } = req.query;
     try{
-        // const products = await productModel.find().limit(limit);
-        const options = {limit: limit || 10, page: page || 1, sort: { price: sort ?? sort}}
-        const products = await productModel.paginate(query || {}, options)
+        let query = {}
+        if (category){
+            query.category = category
+        }
+        const options = {
+            limit: limit || 10, 
+            page: page || 1, 
+            sort: { price: sort ?? sort
+        }}
+        const products = await productModel.paginate(query, options)
         res.status(200).send({response: 'ok', message: products})
     }catch(error){
         res.status(404).send({response: 'error', message: error})
