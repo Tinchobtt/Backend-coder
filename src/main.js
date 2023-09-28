@@ -21,6 +21,9 @@ import { messageModel } from './models/message.models.js';
 import session from 'express-session';
 //Guardado de session en mongo
 import MongoStore from 'connect-mongo';
+//Pasport
+import passport from 'passport';
+import initializePassport from './config/passport.js';
 
 const PORT = 8080;
 const app = express()
@@ -49,6 +52,9 @@ app.use(session({
     resave: false,
     saveUninitialized: false //Sirve para forzar la session aunq no haya ningun dato
 }))
+initializePassport() //Llamo a la estrategia
+app.use(passport.initialize())  //La inicializo
+app.use(passport.session()) //Inicializo las sessiones
 
 //Handlebars
 app.use('/static', express.static(path.join(__dirname, '/public')))

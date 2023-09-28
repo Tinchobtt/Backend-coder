@@ -1,28 +1,43 @@
 import { Router } from "express";
-import { userModel } from "../models/user.models.js";
+import passport from "passport";
 
 const sessionRouter = Router()
 
-sessionRouter.post('/login', async (req, res)=>{
-    const {email, password} = req.body
+sessionRouter.post('/register', passport.authenticate('register'), async (req, res)=>{
     try{
-        if(req.session.login){
-            return res.redirect('/static/home', 301, {})
+        if(!req.user){
+            return res.status(400).send({response: 'error', message: 'This user already exists.'})
         }
-        const user = await userModel.findOne({email: email})
-        if(user){
-            if(user.password === password){
-                req.session.login = true
-                req.session.email = email
-                return res.redirect('/static/home', 301, {})
-            }else{
-                res.status(401).send({response: 'error', message: 'Not authorized'})
-            }
-        }else{
-            res.status(404).send({response: 'error', message: 'User not found.'})
-        }
+        res.status(200).send({response: 'ok', message: 'User created.'})
     }catch(error){
-        res.status(400).send({response: 'error', message: error})
+        res.status(500).send({response: 'error', message: 'Error trying to create the user.'})
+    }
+})
+
+sessionRouter.get('/github', passport.authenticate('github', {scope: ['user:email']}), async (req, res) => {
+    res.status(200).send({response: 'ok', message: 'User registered.'})
+})
+
+sessionRouter.get('/githubCallback', passport.authenticate('github'), async (req, res) => {
+    req.session.user = req.user
+    res.status(200).send({response: 'ok', message: 'User logued in.'})
+})
+
+sessionRouter.post('/login', passport.authenticate('login'), async (req, res)=>{
+    try{
+        if(!req.user){
+            return res.status(401).send({response: 'error', message: 'Invalidate user.'})
+        }
+        req.session.user = {
+            name: req.user.name,
+            email: req.user.email,
+            age: req.user.age
+        }
+        req.session.login = true
+        return res.redirect('/static/home', 301, {})
+        // res.status(200).send({response: 'ok', message: req.user})
+    }catch(error){
+        res.status(500).send({response: 'error', message: error})
     }
 })
 

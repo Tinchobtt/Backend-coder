@@ -1,10 +1,15 @@
-<div class="">
-    <form id="login">
-        <label for="email">Email</label>
-        <input type="email" name="email">
-        <label for="password">Password</label>
-        <input type="password" name="password">
-        <button type="submit">Login</button>
+<div class="form-container">
+    <h1>Login</h1>
+    <form id="login" class="form">
+        <div class="input-container">
+            <label for="email">Email</label>
+            <input type="email" name="email">
+        </div>
+        <div class="input-container">
+            <label for="password">Password</label>
+            <input type="password" name="password">
+        </div>
+        <button type="submit" class="submit-btn">Login</button>
     </form>
-    <button><a href="/static/register">Register</a></button>
+    <a href="/static/register">Register</a>
 </div>

@@ -37,7 +37,7 @@ viewsRouter.get('/chat', async (req, res)=>{
     })
 })
 viewsRouter.get('/login', async (req, res)=>{
-    if (req.session.login) {
+    if (req.session.user) {
         return res.redirect('/static/home');
     } else {
         res.render('login', {
