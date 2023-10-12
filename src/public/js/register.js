@@ -6,7 +6,7 @@ registerForm.addEventListener('submit', (e)=>{
     const data = Object.fromEntries(formData)
     
     try{
-        fetch('/api/users', {
+        fetch('/session/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

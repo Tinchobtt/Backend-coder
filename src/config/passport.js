@@ -1,14 +1,39 @@
+import { userModel } from '../models/user.models.js'
+//passport
 import local from 'passport-local'
 import passport from 'passport'
+//Encriptado
 import { createHash,validatePassword } from '../utils/bcrypt.js'
-import { userModel } from '../models/user.models.js'
 //Github strategy
 import GithubStrategy from 'passport-github2'
+//jwt
+import jwt from 'passport-jwt'
 
 //Defino la estrategia a utilizar
 const localStrategy = local.Strategy
+const JWTStrategy = jwt.Strategy
+const ExtractJWT = jwt.ExtractJwt //Extrar de las cookies el token
  
 const initializePassport = () =>{
+    //Extrae la Cookie
+    const cookieExtractor = req => {
+        const token = req.cookies.jwtCookie ? req.cookies.jwtCookie : {}
+        // console.log("cookieExtractor", token)
+        return token
+    }
+    
+    passport.use('jwt', new JWTStrategy({
+        jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]), //El token va a venir desde cookieExtractor
+        secretOrKey: process.env.JWT_SECRET
+    }, async (jwt_payload, done) => { //jwt_payload = info del token (en este caso, datos del cliente)
+        try {
+            // console.log("JWT", jwt_payload)
+            return done(null, jwt_payload)
+        } catch (error) {
+            return done(error)
+        }
+    }))
+
     passport.use('register', new localStrategy(
         {
             passReqToCallback: true, //
@@ -44,7 +69,7 @@ const initializePassport = () =>{
                     return done(null, false)
                 }
                 if(validatePassword(password, user.password)){
-                    return done(null, user)
+                    return done(null, user) // --> al mandar user passport lo convierte en req.user
                 }
                 return done(null, false)
             }catch(error){
