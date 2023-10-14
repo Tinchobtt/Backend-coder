@@ -26,15 +26,7 @@ export const authToken = (req, res, next) => {
         }
     })
 
-    req
+    //Usuario valido
+    req.user = credential.user
+    next()
 }
-
-generateToken({
-    "_id":"65159a9b05838d862bec1420",
-    "name":"Martin",
-    "surname":" ",
-    "age":"18",
-    "email":"martin.benedetto07@gmail.com",
-    "password":"$2b$15$.Jn3do3SzizZmKwgOeGALuPkitvF2OHaqicKxmxqUp9Hw44/B6y.G",
-    "rol":"user"
-})
