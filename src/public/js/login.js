@@ -6,7 +6,7 @@ loginForm.addEventListener('submit', (e)=>{
     const data = Object.fromEntries(formData)
 
     try{
-        fetch('/session/login', {
+        fetch('/api/session/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

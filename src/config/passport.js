@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import { userModel } from '../models/user.models.js'
 //passport
 import local from 'passport-local'

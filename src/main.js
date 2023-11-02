@@ -2,12 +2,7 @@ import 'dotenv/config'
 import express from 'express'
 import path from 'path'
 //Rutas
-import productsRouter from './routes/products.routes.js';
-import cartRouter from './routes/cart.routes.js';
-import viewsRouter from './routes/views.routes.js';
-import messagesRouter from './routes/messages.routes.js';
-import userRouter from './routes/users.routes.js';
-import sessionRouter from './routes/session.routes.js';
+import router from './routes/index.routes.js';
 //Socket.io
 import { __dirname } from './path.js';
 import { engine } from 'express-handlebars';
@@ -85,9 +80,4 @@ io.on('connection', (socket)=>{
 })
 
 //ROUTES
-app.use('/api/products', productsRouter)
-app.use('/api/carts', cartRouter)
-app.use('/api/users', userRouter)
-app.use('/messages', messagesRouter)
-app.use('/static', viewsRouter)
-app.use('/session', sessionRouter)
+app.use('/', router)

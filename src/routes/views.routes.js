@@ -4,29 +4,29 @@ import { productModel } from "../models/product.models.js";
 const viewsRouter = Router()
 
 //Middleware para verificar si es admin
-const auth = (req, res, next)=>{
-    if(req.session.email === "adminCoder@coder.com" && req.session.password === "adminCod3r123"){
-        return next()
-    }
-    return res.redirect('/static/home', 301, {})
-}
+// const auth = (req, res, next)=>{
+//     if(req.session.email === "adminCoder@coder.com" && req.session.password === "adminCod3r123"){
+//         return next()
+//     }
+//     return res.redirect('/static/home', 301, {})
+// }
 
-const isLogged = (req, res, next) => {
-    if (req.session.login) {
-        return next();
-    } else {
-        return res.redirect('/static/login');
-    }
-};
+// const isLogged = (req, res, next) => {
+//     if (req.session.login) {
+//         return next();
+//     } else {
+//         return res.redirect('/static/login');
+//     }
+// };
 
-viewsRouter.get('/home', isLogged, async (req, res)=>{
+viewsRouter.get('/home', async (req, res)=>{
     const products = await productModel.find().lean();
     res.render('home', {
         products,
         script: ''
     });
 })
-viewsRouter.get('/realTimeProducts', auth, (req, res)=>{
+viewsRouter.get('/realTimeProducts', (req, res)=>{
     res.render('realTimeProducts',{
         script: "js/index.js"
     })

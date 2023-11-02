@@ -1,82 +1,13 @@
 import { Router } from 'express'
-import { productModel } from '../models/product.models.js'
+import { getProducts, getProductById, postProduct, putProductById, deleteProductById } from '../controllers/products.controller.js';
+import { passportError, authorization } from '../utils/messageError.js';
 
 const productsRouter = Router()
 
-productsRouter.get('/', async (req, res) =>{
-    const { limit, page, sort, category } = req.query;
-    try{
-        let query = {}
-        if (category){
-            query.category = category
-        }
-        const options = {
-            limit: limit || 10, 
-            page: page || 1, 
-            sort: { price: sort ?? sort
-        }}
-        const products = await productModel.paginate(query, options)
-        res.status(200).send({response: 'ok', message: products})
-    }catch(error){
-        res.status(404).send({response: 'error', message: error})
-    }
-})
-
-productsRouter.get('/:id', async (req, res) =>{
-    const id = req.params.id;
-    try{
-        const product = await productModel.findById(id);
-        if(product){
-            res.status(200).send({response: 'ok', message: product})
-        }else{
-            res.status(404).send({response: 'error', message: 'Not Found'})
-        }
-    }catch(error){
-        res.status(400).send({response: 'error', message: error})
-    }
-})
-
-productsRouter.post('/', async (req, res) =>{
-    const { title, description, price, code, stock, category } = req.body;
-    try{
-        const product = await productModel.create({ title, description, price, code, stock, category })
-        if(product){
-            res.status(200).send({response: 'ok', message: 'Product created'})
-        }else{
-            res.status(400).send({response: 'error', message: 'Not Found'})
-        }
-    }catch(error){
-        res.status(400).send({response: 'Error trying to create the product', message: error})
-    }
-})
-
-productsRouter.put('/:id', async (req, res) =>{
-    const { id } = req.params;
-    const { title, description, price, code, stock, category, status } = req.body;
-    try{
-        const product = await productModel.findByIdAndUpdate(id, {title, description, price, code, stock, category, status})
-        if(product){
-            res.status(200).send({response: 'ok', message: 'Product updated'})
-        }else{
-            res.status(404).send({response: 'error', message: 'Not Found'})
-        }
-    }catch(error){
-        res.status(400).send({response: 'Error trying to update the product', message: error})
-    }
-})
-
-productsRouter.delete('/:id', async (req, res) =>{
-    const id = req.params.id;
-    try{
-        const product = await productModel.findByIdAndDelete(id)
-        if(product){
-            res.status(200).send({response: 'ok', message: 'Product deleted'})
-        }else{
-            res.status(404).send({response: 'error', message: 'Not Found'})
-        }
-    }catch(error){
-        res.status(400).send({response: 'Error trying to delete the product', message: error})
-    }
-})
+productsRouter.get('/', getProducts)
+productsRouter.get('/:id', getProductById)
+productsRouter.post('/', passportError('jwt'), authorization('admin'), postProduct)
+productsRouter.put('/:id', passportError('jwt'), authorization('admin'), putProductById)
+productsRouter.delete('/:id', passportError('jwt'), authorization('admin'), deleteProductById)
 
 export default productsRouter

@@ -35,7 +35,7 @@ const userSchema = new Schema({
     }
 })
 
-userSchema.plugin(paginate) //Implementar el metodo paginate en el schema
+// userSchema.plugin(paginate) //Implementar el metodo paginate en el schema
 
 userSchema.pre('save', async function(next) {
     try{
