@@ -22,7 +22,7 @@ export const authToken = (req, res, next) => {
     const token = authHeader.split('')[1] //Obtengo el token y descarto el Bearer
     Jwt.sign(token, process.env.JWT_SECRET, (error, credential) => {
         if(error){
-            return res.status(403).send({error: 'Unauthenticaterd user. Invalid token.'})
+            return res.status(403).send({error: 'Unauthenticated user. Invalid token.'})
         }
     })
 

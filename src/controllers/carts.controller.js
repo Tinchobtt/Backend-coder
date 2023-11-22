@@ -151,3 +151,12 @@ export const deleteProductFromCart = async (req, res)=>{
         res.status(400).send({response: 'Error trying to delete the product of the cart.', message: error});
     }
 }
+export const purchase = async (req, res) => {
+    const { id } = req.params
+    // const cart = await cartModel.findById(id);
+    // if(cart){
+
+    //     return res.status(200).send({response: 'ok', message: cart})
+    // }
+    // res.status(404).send({response: 'error', message: 'Not found'})
+}

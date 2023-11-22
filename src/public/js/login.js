@@ -4,7 +4,6 @@ loginForm.addEventListener('submit', (e)=>{
     e.preventDefault()
     let formData = new FormData(e.target)
     const data = Object.fromEntries(formData)
-
     try{
         fetch('/api/session/login', {
             method: 'POST',
@@ -14,7 +13,7 @@ loginForm.addEventListener('submit', (e)=>{
             body: JSON.stringify(data)
         })
         .then(res => {
-            if(res.ok) window.location.href = res.url
+            if(res.ok) window.location.href = res.url;
         })
     }catch(error){
         console.log(error)

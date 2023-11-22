@@ -47,7 +47,7 @@ const initializePassport = () =>{
             try{
                 const user = await userModel.findOne({email: email})
                 if(user){ //Caso error usuario existente
-                    return done(null, false)
+                    return done(null, false)  //done: primer atributo es el error
                 }
                 //Creo usuario
                 const passwordHash = createHash(password)
