@@ -1,5 +1,6 @@
 import { cartModel } from '../models/cart.models.js';
 import { productModel } from '../models/product.models.js';
+import { ticketModel } from '../models/ticket.model.js';
 
 export const getCarts = async (req, res) => {
     try {
@@ -152,11 +153,36 @@ export const deleteProductFromCart = async (req, res)=>{
     }
 }
 export const purchase = async (req, res) => {
-    const { id } = req.params
-    // const cart = await cartModel.findById(id);
-    // if(cart){
+    const { cid } = req.params
+    //Busco si el carrito existe
+    try{
+        const cart = await cartModel.findById(cid);
+        if(cart){
+            let totalPrice = 0;
+            let availableProducts = [];
+            //Recorro los productos del carrito
+            for(const prod of cart.products){
+                let idProd = prod.id_prod; //Extraigo el ID del producto
+                let productBD = await productModel.findById(idProd); //Recupero el producto desde la BDD
 
-    //     return res.status(200).send({response: 'ok', message: cart})
-    // }
-    // res.status(404).send({response: 'error', message: 'Not found'})
+                if(prod.quantity <= productBD.stock){ //Si la cantidad requerida tiene stock suficiente
+                    totalPrice += prod.quantity * productBD.price; //se suma al precio total de la compra
+                    productBD.stock -= prod.quantity; //se resta el stock solicitado
+                    let update = await productModel.findByIdAndUpdate(idProd, productBD) //Se actualiza el stock del producto en BDD
+                    availableProducts.push(prod)
+                }
+            }
+            let ticket = await ticketModel.create({amount: totalPrice, purchaser: req.user.email}) //Creacion del ticket
+            if(ticket){
+                cart.products = []
+                let updateCart = await cartModel.findByIdAndUpdate(cid, cart) //Vacias el carrito
+            }
+
+            return res.status(200).send({response: 'ok', message: ticket})
+        }
+        res.status(404).send({response: 'error', message: 'Not found'})
+    }catch(error){
+        console.log(error)
+        res.status(500).send({response: 'error', message: error})
+    }
 }

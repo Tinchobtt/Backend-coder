@@ -26,7 +26,7 @@ export const login = async (req, res) => {
 
         const token = generateToken(req.user)
         res.cookie('jwtCookie', token, { maxAge: 43200000  }) //12 hs en segundos
-        // res.status(200).send({response: 'ok', message: req.user})
+        // return res.status(200).send({response: 'ok', message: req.user})
 
         return res.redirect('/static/home', 301, {response: 'ok', message: req.user})
     }catch(error){
