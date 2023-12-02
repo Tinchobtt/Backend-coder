@@ -6,6 +6,7 @@ import cartRouter from "./cart.routes.js";
 import viewsRouter from "./views.routes.js";
 import messagesRouter from "./messages.routes.js";
 import mockingRouter from "./mocking.routes.js";
+import { loggerRouter } from "./loggers.routes.js";
 
 const router = Router()
 
@@ -16,5 +17,6 @@ router.use('/api/carts', cartRouter)
 router.use('/static', viewsRouter)
 router.use('/messages', messagesRouter)
 router.use('/mockingProducts', mockingRouter)
+router.use('/logger', loggerRouter)
 
 export default router

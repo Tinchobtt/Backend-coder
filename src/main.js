@@ -20,6 +20,8 @@ import MongoStore from 'connect-mongo';
 import passport from 'passport';
 import initializePassport from './config/passport.js';
 import cookieParser from 'cookie-parser';
+//Logger
+import { addLogger } from './config/logger.js';
 
 const PORT = 8080;
 const app = express()
@@ -35,6 +37,7 @@ const server = app.listen(PORT, ()=>{
 //Middlewares
 app.use(express.json())
 app.use(express.urlencoded( {extended: true} ))
+app.use(addLogger)
 app.use(cookieParser(process.env.SIGNED_COOKIE))
 app.use(session({
     store: MongoStore.create({
