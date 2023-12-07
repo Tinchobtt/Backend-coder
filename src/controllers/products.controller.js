@@ -14,6 +14,11 @@ export const getProducts = async (req, res) => {
         }}
         const products = await productModel.paginate(query, options)
         if(products){
+            if(req.user?.rol === 'premium'){
+                products.docs.forEach(prod => {
+                    prod.price = prod.price * 0.9;
+                });
+            }
             return res.status(200).send({response: 'ok', message: products})
         }
         res.status(404).send({response: 'error', message: 'Not Found.'})

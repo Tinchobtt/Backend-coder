@@ -1,6 +1,6 @@
 import { Router } from "express"
 
-export const loggerRouter = Router()
+const loggerRouter = Router()
 
 loggerRouter.use('/fatal', (req, res) => {
     req.logger.fatal('fatal')
@@ -18,3 +18,5 @@ loggerRouter.use('/info', (req, res) => {
     req.logger.info('info')
     res.send('info')
 })
+
+export default loggerRouter

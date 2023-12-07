@@ -5,10 +5,10 @@ const productsContainer = document.querySelector('.active-products-container');
 const uploadBtn = document.querySelector('#upload-btn');
 
 const getProductsFetch = ()=>{
-    fetch('/api/products/')
+    fetch('/api/products?limit=100')
     .then(res => res.json())
     .then(data => {
-        const reverseData = data.message.reverse();
+        const reverseData = data.message.docs.reverse();
         let products = '';
         reverseData.forEach(prod => {
             products += `

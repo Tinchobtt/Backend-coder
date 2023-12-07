@@ -12,6 +12,7 @@ sessionRouter.get('/logout', logout)
 sessionRouter.get('/github', passport.authenticate('github', {scope: ['user:email']}), async (req, res) => {
     res.status(200).send({response: 'ok', message: 'User registered.'})
 })
+
 sessionRouter.get('/githubCallback', passport.authenticate('github'), async (req, res) => {
     req.session.user = req.user
     res.status(200).send({response: 'ok', message: 'User logued in.'})
