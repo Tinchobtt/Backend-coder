@@ -14,7 +14,7 @@ export const getProducts = async (req, res) => {
         }}
         const products = await productModel.paginate(query, options)
         if(products){
-            if(req.user?.rol === 'premium'){
+            if(req.user?.isPremium){
                 products.docs.forEach(prod => {
                     prod.price = prod.price * 0.9;
                 });

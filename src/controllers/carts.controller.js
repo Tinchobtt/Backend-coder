@@ -164,6 +164,7 @@ export const purchase = async (req, res) => {
             for(const prod of cart.products){
                 let idProd = prod.id_prod; //Extraigo el ID del producto
                 let productBD = await productModel.findById(idProd); //Recupero el producto desde la BDD
+                if(req.user?.isPremium) productBD.price *= .9
 
                 if(prod.quantity <= productBD.stock){ //Si la cantidad requerida tiene stock suficiente
                     totalPrice += prod.quantity * productBD.price; //se suma al precio total de la compra

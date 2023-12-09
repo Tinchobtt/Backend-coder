@@ -7,7 +7,7 @@ const premiumRoute = Router();
 premiumRoute.get('/', passportError('jwt'), authorization('user'), async (req, res) => {
     try{
         if(req.user){
-            req.user.user.rol = 'premium'
+            req.user.user.isPremium = true
             const updatedUser = await userModel.findByIdAndUpdate(req.user.user._id, req.user.user, {new: true})
             return res.status(200).send(updatedUser)
         }
