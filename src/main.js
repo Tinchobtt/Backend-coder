@@ -22,6 +22,9 @@ import initializePassport from './config/passport.js';
 import cookieParser from 'cookie-parser';
 //Logger
 import { addLogger } from './config/logger.js';
+//Documentacio
+import swaggerJSDoc from 'swagger-jsdoc';
+import SwaggerUiExpress from 'swagger-ui-express'
 
 const PORT = 8080;
 const app = express()
@@ -81,6 +84,19 @@ io.on('connection', (socket)=>{
         socket.emit('messages', messages)
     })
 })
+
+const swaggerOpts = {
+    definition: {
+        openapi: '3.1.0',
+        info: {
+            title: 'API Coder Backend',
+            description: 'Documentacion del curso de backend'
+        }
+    },
+    apis: [`${__dirname}/docs/**/*.yaml`] //Indico la subcarpeta docs que no me interesa el nombre y luego busco el archivo que no me interesa el nombre pero si la extension
+}
+const specs = swaggerJSDoc(swaggerOpts)
+app.use('/apidocs', SwaggerUiExpress.serve, SwaggerUiExpress.setup(specs))
 
 //ROUTES
 app.use('/', router)
