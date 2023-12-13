@@ -1,0 +1,29 @@
+paths:
+  /api/carts/{cid}/products/{pid}:
+    post:
+      summary: Agregar un producto a un carrito
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          schema: 
+            type: string
+          description: ID del carrito
+        - name: pid
+          in: path
+          required: true
+          schema: 
+            type: string
+          description: ID del producto a agregar al carrito
+      responses:
+        '200':
+          description: Producto agregado correctamente al carrito
+          content:
+            application/json:
+              schema:
+                items: 
+                  $ref: '#/components/schemas/Product'
+        '500':
+          description: Error interno del servidor
