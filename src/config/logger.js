@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import winston from "winston";
 
 const customLevelOpt = {
@@ -5,16 +6,18 @@ const customLevelOpt = {
         fatal: 0,
         error: 1,
         warning: 2,
-        info: 3,
-        debug: 4
+        info: 3
     },
     colors: {
         fatal: 'red',
         error: 'red',
         warning: 'yellow',
-        info: 'blue',
-        debug: 'cyan'
+        info: 'blue'
     }
+}
+if(process.env.ENTORNO === 'development'){
+    customLevelOpt.levels.debug = 4
+    customLevelOpt.colors.debug = 'cyan'
 }
 
 const logger = winston.createLogger({
@@ -52,18 +55,22 @@ const logger = winston.createLogger({
                 winston.format.simple()
             )
         }),
-        new winston.transports.Console({
-            level: 'debug',
-            format: winston.format.combine(
-                winston.format.colorize({colors: customLevelOpt.colors}),
-                winston.format.simple()
-            )
-        })
+        process.env.ENTORNO === 'development' && (
+            new winston.transports.Console({
+                level: 'debug',
+                format: winston.format.combine(
+                    winston.format.colorize({colors: customLevelOpt.colors}),
+                    winston.format.simple()
+                )
+            })
+        )
     ]
 })
 
 export const addLogger = (req, res, next) => {
     req.logger = logger;
-    req.logger.debug(`${req.method} es ${req.url} - ${new Date().toLocaleDateString()}`)
+    if(process.env.ENTORNO === 'development'){
+        req.logger.debug(`${req.method} es ${req.url} - ${new Date().toLocaleDateString()}`)
+    }
     next()
 }
