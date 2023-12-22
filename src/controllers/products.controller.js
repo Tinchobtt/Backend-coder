@@ -45,7 +45,7 @@ export const postProduct = async (req, res) => {
     try{
         const product = await productModel.create({ title, description, price, code, stock, category })
         if(product){
-            return res.status(200).send({response: 'ok', message: 'Product created'})
+            return res.status(200).send({response: 'ok', message: product})
         }
         res.status(400).send({response: 'error', message: 'Error trying to create the product.'})
         

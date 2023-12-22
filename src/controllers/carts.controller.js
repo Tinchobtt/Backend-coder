@@ -33,7 +33,7 @@ export const addProductToCart = async (req, res) => {
         if(cart){
             const product = await productModel.findById(pid);
             if(product){
-                const index = cart.products.findIndex(prod => prod.id_prod === pid);
+                const index = cart.products.findIndex(prod => prod.id_prod._id.toString() === pid);
                 if(index != -1){
                     cart.products[index].quantity = quantity; 
                 }else{

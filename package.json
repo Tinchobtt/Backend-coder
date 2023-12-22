@@ -5,7 +5,12 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "dev": "nodemon src/main.js"
+    "dev": "nodemon src/main.js",
+    "testProducts": "mocha test/Products.test.js",
+    "testSession": "mocha test/Session.test.js",
+    "testCart": "mocha test/Cart.test.js",
+    "testUsers": "mocha test/Users.test.js",
+    "testChai": "mocha test/UserChai.test.js"
   },
   "keywords": [],
   "author": "",
@@ -32,7 +37,10 @@
     "winston": "^3.11.0"
   },
   "devDependencies": {
+    "chai": "^4.3.10",
     "chalk": "^5.3.0",
-    "nodemon": "^3.0.1"
+    "mocha": "^10.2.0",
+    "nodemon": "^3.0.1",
+    "supertest": "^6.3.3"
   }
 }

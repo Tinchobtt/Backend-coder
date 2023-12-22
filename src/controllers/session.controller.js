@@ -5,7 +5,7 @@ export const register = async (req, res) => {
         if(!req.user){
             return res.status(400).send({response: 'error', message: 'This user already exists.'})
         }
-        res.status(200).send({response: 'ok', message: 'User created.'})
+        res.status(200).send({response: 'ok', message: req.user})
     }catch(error){
         res.status(500).send({response: 'error', message: 'Error trying to create the user.'})
     }
@@ -39,6 +39,6 @@ export const logout = async (req, res) => {
     //     req.session.destroy()
     // }
     res.clearCookie('jwtCookie')
-    // res.status(200).send({ resultado: 'User logued out.' })
+    // return res.status(200).send({ response: 'User logued out.' })
     return res.redirect('/static/login', 301, {response: 'ok', message: 'User logued out.'})
 }

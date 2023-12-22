@@ -18,7 +18,7 @@ sessionRouter.get('/githubCallback', passport.authenticate('github'), async (req
     res.status(200).send({response: 'ok', message: 'User logued in.'})
 })
 
-sessionRouter.get('/current', passportError('jwt'), authorization('admin'), (req, res) => {
+sessionRouter.get('/current', passportError('jwt'), authorization('user'), (req, res) => {
     res.send(req.user)
 })
 

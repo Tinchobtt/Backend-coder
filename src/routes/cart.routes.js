@@ -9,7 +9,7 @@ cartRouter.get('/:id', getCartById)
 cartRouter.post('/:cid/products/:pid', passportError('jwt'), addProductToCart)
 cartRouter.post('/', createCart)
 cartRouter.put('/:cid', updateCartById);
-cartRouter.put('/:cid/products/:pid', passportError('jwt'),updateProductFromCart)
+cartRouter.put('/:cid/products/:pid', passportError('jwt'), updateProductFromCart)
 cartRouter.delete('/:cid', deleteCartById)
 cartRouter.delete('/:cid/products/:pid', deleteProductFromCart)
 cartRouter.post('/:cid/purchase', purchase)
