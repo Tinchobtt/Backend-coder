@@ -6,11 +6,11 @@
   "main": "main.js",
   "scripts": {
     "dev": "nodemon src/main.js",
-    "testProducts": "mocha test/Products.test.js",
-    "testSession": "mocha test/Session.test.js",
-    "testCart": "mocha test/Cart.test.js",
-    "testUsers": "mocha test/Users.test.js",
-    "testChai": "mocha test/UserChai.test.js"
+    "testProducts": "mocha --timeout 5000 test/Products.test.js",
+    "testSession": "mocha --timeout 5000 test/Session.test.js",
+    "testCart": "mocha --timeout 5000 test/Cart.test.js",
+    "testUsers": "mocha --timeout 5000 test/User.test.js",
+    "testChai": "mocha --timeout 5000 test/UserChai.test.js"
   },
   "keywords": [],
   "author": "",

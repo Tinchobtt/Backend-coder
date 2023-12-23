@@ -32,7 +32,7 @@ describe('Test Carts api/carts', function(){
 
     it('Ruta: api/carts - Agregar producto al carrito con metodo POST', async () => {
         const result = await requester.post('/api/carts/6576ff1560f6ba0b31b29276/products/64fc488ebe140cecfcdb0f97').set('Cookie', [`${cookie.name} = ${cookie.value}`]).send({quantity: 2})
-
+        
         expect(result).to.be.ok
     })
 })

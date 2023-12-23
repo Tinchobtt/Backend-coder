@@ -49,11 +49,16 @@ export const logout = async (req, res) => {
     return res.redirect('/static/login', 301, {response: 'ok', message: 'User logued out.'})
 }
 
-export const passwordRecovery = (req, res) => {
+export const passwordRecovery = async (req, res) => {
     //Enviar email
     const { email } = req.body
 
     try{
+        const user = await userModel.findOne({email: email})
+        if(!user){
+            return res.status(404).send({response: 'error', message: 'User not found.'})
+        }
+
         const token = crypto.randomBytes(20).toString('hex') //Token unico para que no se repita
         recoveryLinks[token] = {email: email, timestamp: Date.now()}
 
@@ -71,9 +76,11 @@ export const resetPassword = async(req, res) => {
     const {newPassword, repeatedPassword} = req.body
 
     try{
-        const data = recoveryLinks[token]
+        const { email } = recoveryLinks[token]
         if(data && Date.now() - data.timestamp <= 3600000){
-            const { email } = data
+            if(!newPassword || !repeatedPassword){
+                return res.status(400).send({response: 'error', message: 'Invalid type of password.'})
+            }
             if(newPassword === repeatedPassword){
                 const encryptedPassword = createHash(newPassword)
                 const user = await userModel.findOneAndUpdate({email: email}, {password: encryptedPassword})
