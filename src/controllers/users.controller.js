@@ -48,3 +48,19 @@ export const deleteUserById = async (req, res) => {
         res.status(400).send({ response: error, message: 'Error trying to delete the user' })
     }
 }
+export const loadDocuments = async (req, res) => {
+    const { uid } = req.params
+    const dataDocument = {
+        name: req.file.originalname,
+        reference: req.file.path
+    }
+    try{
+        const user = await userModel.findByIdAndUpdate(uid, {documents: dataDocument}, {new: true})
+        if(!user){
+            return res.status(400).send({response: 'error', message: 'Error trying yo upload the docuemnt.'})
+        }
+        res.status(200).send({response: 'ok', message: 'Document uploaded.'})
+    }catch(error){
+        res.status(500).send({response: 'error', message: error.message})
+    }
+}

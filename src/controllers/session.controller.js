@@ -31,6 +31,10 @@ export const login = async (req, res) => {
         // req.session.login = true
 
         const token = generateToken(req.user)
+
+        const actualConnection = Date.now()
+        const user = await userModel.findByIdAndUpdate(req.user._id, {last_connection: actualConnection})
+
         res.cookie('jwtCookie', token, { maxAge: 43200000  }) //12 hs en segundos
         // return res.status(200).send({response: 'ok', message: req.user})
 
