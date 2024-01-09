@@ -55,10 +55,13 @@ export const loadDocuments = async (req, res) => {
         reference: req.file.path
     }
     try{
-        const user = await userModel.findByIdAndUpdate(uid, {documents: dataDocument}, {new: true})
-        if(!user){
-            return res.status(400).send({response: 'error', message: 'Error trying yo upload the docuemnt.'})
-        }
+        const user = await userModel.findById(uid)
+        if(!user) return res.status(404).send({response: 'error', message: 'User not found.'})
+        user.documents.push(dataDocument)
+    
+        const updatedUser = await userModel.findByIdAndUpdate(uid, user, {new: true})
+        if(!updatedUser) return res.status(400).send({response: 'error', message: 'Error trying to upload the document.'})
+
         res.status(200).send({response: 'ok', message: 'Document uploaded.'})
     }catch(error){
         res.status(500).send({response: 'error', message: error.message})
