@@ -1,3 +1,4 @@
+import { noticeUserDelete } from "../config/nodemailer.js";
 import { userModel } from "../models/user.models.js";
 
 export const getUsers = async (req, res) => {
@@ -65,5 +66,31 @@ export const loadDocuments = async (req, res) => {
         res.status(200).send({response: 'ok', message: 'Document uploaded.'})
     }catch(error){
         res.status(500).send({response: 'error', message: error.message})
+    }
+}
+export const getInfoUser = async (req, res) => {
+    try{
+        const users = await userModel.find()
+        if(!users) return res.status(404).send({response: 'error', message: 'Error trying to find the users.'})
+
+        const infoUsers = users.map(user => {name: user.name; email: user.email; rol: user.rol })
+    }catch(error){
+        console.log(error);
+    }
+}
+export const deleteUsers = async (req, res) => {
+    try{
+        const users = await userModel.find()
+        if(!users) return res.status(404).send({response: 'error', message: 'Error trying to find the users.'})
+
+        const inactiveUsers = users.filter(user => user.last_connection - Date.now >= 2)
+
+        inactiveUsers.forEach(async user => {
+            const deleteUser = await userModel.findByIdAndDelete(user._id)
+            noticeUserDelete(deleteUser)
+        })
+
+    }catch(error){
+        console.log(error);
     }
 }

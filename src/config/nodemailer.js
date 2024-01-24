@@ -27,3 +27,19 @@ export const sendRecoveryEmail = (email, recoveryLink) => {
         }
     })
 }
+export const noticeUserDelete = (email) => {
+    const emailOpts = {
+        from: 'testingo.code.mb@gmail.com',
+        to: email,
+        subject: 'Information about your account.',
+        text: `We notice you that your account has been deleted for inactivity.` 
+    }
+    transport.sendMail(emailOpts, (error, info) => {
+        if(error){
+            console.log(error)
+        }else{
+            console.log('Email enviado correctamente')
+        }
+    })
+}
+
