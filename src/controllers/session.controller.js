@@ -1,7 +1,9 @@
+import 'dotenv/config'
 import { generateToken } from "../utils/jwt.js";
 import { sendRecoveryEmail } from "../config/nodemailer.js";
 import { userModel } from "../models/user.models.js";
 import { createHash } from "../utils/bcrypt.js";
+import Jwt from "jsonwebtoken";
 import crypto from 'crypto'
 
 const recoveryLinks = []
@@ -103,3 +105,19 @@ export const resetPassword = async(req, res) => {
         res.status(500).send({response: 'error', message: error.message})
     }
 }
+
+export const verifyToken = async (req, res) => {
+    try {
+        const token = req.cookies.jwtCookie;
+
+        if (!token) {
+            return res.status(401).send({ response: 'error', message: 'No se encontró el token en las cookies.' });
+        }
+
+        const user = Jwt.verify(token, process.env.JWT_SECRET);
+
+        res.status(200).send({ response: 'ok', user: user });
+    } catch (error) {
+        res.status(500).send({ response: 'error', message: 'Error al intentar verificar el token del usuario.' });
+    }
+};

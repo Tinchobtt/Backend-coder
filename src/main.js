@@ -34,7 +34,7 @@ mongoose.connect(process.env.MONGO_URL)
 .catch((error)=>{ console.log(error) })
 
 const server = app.listen(PORT, ()=>{
-    console.log(`Server running on PORT: ${PORT}\n${chalk.yellow(`http://localhost:${PORT}/static/home`)}`);
+    console.log(`Server running on PORT: ${PORT}\n${chalk.yellow(`http://localhost:${PORT}/static/login`)}`);
 })
 
 //Middlewares

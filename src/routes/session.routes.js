@@ -1,7 +1,7 @@
 import { Router } from "express";
 import passport from "passport";
 import { passportError, authorization } from "../utils/messageError.js";
-import { register, login, logout, passwordRecovery, resetPassword } from "../controllers/session.controller.js";
+import { register, login, logout, passwordRecovery, resetPassword, verifyToken } from "../controllers/session.controller.js";
 
 const sessionRouter = Router()
 
@@ -21,6 +21,8 @@ sessionRouter.get('/githubCallback', passport.authenticate('github'), async (req
 sessionRouter.get('/current', passportError('jwt'), authorization('user'), (req, res) => {
     res.send(req.user)
 })
+
+sessionRouter.get('/verifyToken', verifyToken)
 
 sessionRouter.post('/password-recovery', passwordRecovery)
 sessionRouter.post('/reset-password/:token', resetPassword)

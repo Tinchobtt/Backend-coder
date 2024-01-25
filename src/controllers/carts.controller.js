@@ -35,7 +35,8 @@ export const addProductToCart = async (req, res) => {
             if(product){
                 const index = cart.products.findIndex(prod => prod.id_prod._id.toString() === pid);
                 if(index != -1){
-                    cart.products[index].quantity = quantity; 
+                    let actualQuantity = cart.products[index].quantity + 1
+                    cart.products[index].quantity = actualQuantity; 
                 }else{
                     cart.products.push({id_prod: pid, quantity: quantity})
                 }
