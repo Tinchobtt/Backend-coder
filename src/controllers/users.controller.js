@@ -72,8 +72,8 @@ export const getInfoUser = async (req, res) => {
     try{
         const users = await userModel.find()
         if(!users) return res.status(404).send({response: 'error', message: 'Error trying to find the users.'})
-
-        const infoUsers = users.map(user => {name: user.name; email: user.email; rol: user.rol })
+        
+        const infoUsers = users.map(user => ({name: user.name, email: user.email, rol: user.rol }))
         return res.status(200).send({response: 'ok', message: infoUsers})
     }catch(error){
         res.status(500).send({response: 'error', message: 'Internal server error.'});
@@ -85,12 +85,12 @@ export const deleteUsers = async (req, res) => {
         if(!users) return res.status(404).send({response: 'error', message: 'Error trying to find the users.'})
 
         const inactiveUsers = users.filter(user => {
-            return (Date.now() - new Date(user.last_connection).getTime()) >= 2 * 24 * 60 * 60 * 1000;
+            return (Date.now() - new Date(user.last_connection).getTime()) >= 2 * 24 * 60 * 60 * 1000 && user.rol !== 'admin';
         });
 
         for(const user of inactiveUsers) {
             const deleteUser = await userModel.findByIdAndDelete(user._id);
-            noticeUserDelete(deleteUser);
+            noticeUserDelete(deleteUser.email);
         }
 
         res.status(200).send({ response: 'ok', message: 'Inactive users deleted successfully.'});

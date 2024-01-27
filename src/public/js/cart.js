@@ -1,23 +1,40 @@
 const productsContainer = document.querySelector('.cart-products')
+const clearCartBtn = document.querySelector('.clearCartBtn')
 
-const fetchProducts = ()=> {
-    fetch('/api/session/verifyToken', {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-        }
-    })
-    .then(res => res.json())
-    .then(data => {
-        fetch(`/api/carts/${data.user.user.cart}`, {
+const checkToken = async () => {
+    try {
+        const response = await fetch('/api/session/verifyToken', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
             }
-        })
-        .then(res => res.json())
-        .then(prods => {
-            let products = ''
+        });
+
+        const data = await response.json();
+
+        if (!data) return null;
+        return data;
+    } catch (error) {
+        return null;
+    }
+}
+
+const fetchProducts = async () => {
+    try {
+        const data = await checkToken();
+
+        if (!data) {
+            productsContainer.innerHTML = '';
+        } else {
+            const response = await fetch(`/api/carts/${data.user.user.cart}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+            const prods = await response.json();
+
+            let products = '';
             prods.message.products.forEach(prod => {
                 products += `
                     <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -26,29 +43,65 @@ const fetchProducts = ()=> {
                             <span>Price: ${prod.id_prod.price}</span>
                             <span>Quantity: ${prod.quantity}</span>
                         </div>
-                        <button onClick="deleteProductFromCart('${prod._id}', '${prod.id_prod._id}')">Delete</button>
+                        <button onClick="deleteProductFromCart('${data.user.user.cart}', '${prod.id_prod._id}')">Delete</button>
                     </div>
                     <hr style="margin: 1rem 0">
-                `
+                `;
             });
-            productsContainer.innerHTML = products
-        })
-        .catch(error => {
-            console.log(error);
+            productsContainer.innerHTML = products;
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+fetchProducts();
+
+const deleteProductFromCart = async (idCart, idProd) => {
+    try {
+        const response = await fetch(`/api/carts/${idCart}/products/${idProd}`, {
+            method: 'delete',
+            headers: {
+                'Content-Type': 'application/json',
+            }
         });
-    })
-}
-fetchProducts()
 
-const deleteProductFromCart = (idCart, idProd) => {
-    // fetch(`/api/carts/${idCart}/${idProd}`, {
-    //     method: 'delete',
-    //     headers: {
-    //         'Content-Type': 'application/json',
-    //     }
-    // })
-}
+        if (!response.ok) {
+            throw new Error(`Error ${response.status}: ${response.statusText}`);
+        }
 
-const clearCart = () => {
+        fetchProducts();
+    } catch (error) {
+        console.error('Error en la solicitud:', error);
+        throw error;
+    }
+};
 
-}
+
+clearCartBtn.addEventListener('click', async () => {
+    try {
+        const data = await checkToken();
+        if (data) {
+            const response = await fetch(`/api/carts/${data.user.user.cart}/clearCart`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Error al vaciar el carrito');
+            }
+
+            Swal.fire({
+                title: "Cart empty",
+                icon: "success"
+            });
+            fetchProducts();
+        }
+    } catch (error) {
+        Swal.fire({
+            title: "Error!",
+            icon: "error"
+        });
+    }
+});

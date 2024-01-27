@@ -50,7 +50,6 @@ const deleteBtn = (id)=>{
         reverseButtons: true
     }).then((result) => {
         if (result.isConfirmed) {
-            console.log(id)
             socket.emit('deleteProduct', id)
             socket.on('productDeleted', async (confirm)=>{
                 if(confirm){

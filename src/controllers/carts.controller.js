@@ -174,7 +174,7 @@ export const purchase = async (req, res) => {
                     availableProducts.push(prod)
                 }
             }
-            let ticket = await ticketModel.create({amount: totalPrice, purchaser: req.user.email}) //Creacion del ticket
+            let ticket = await ticketModel.create({amount: totalPrice, purchaser: req.user.user.email}) //Creacion del ticket
             if(ticket){
                 cart.products = []
                 let updateCart = await cartModel.findByIdAndUpdate(cid, cart) //Vacias el carrito
@@ -186,5 +186,18 @@ export const purchase = async (req, res) => {
     }catch(error){
         console.log(error)
         res.status(500).send({response: 'error', message: error})
+    }
+}
+export const clearCartById = async (req, res) => {
+    const {cid} = req.params
+    try{
+        const cart = await cartModel.findById(cid)
+        if(!cart) return res.status(404).send({response: 'error', message: 'Cart not found.'})
+
+        cart.products = []
+        let updateCart = await cartModel.findByIdAndUpdate(cid, cart) //Vacias el carrito
+        return res.status(200).send({response: 'ok', message: 'Cart empty.'})
+    }catch(error){
+        res.status(500).send({response: 'error', message: error.message})
     }
 }

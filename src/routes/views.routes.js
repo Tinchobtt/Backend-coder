@@ -33,5 +33,10 @@ viewsRouter.get('/cart', async (req, res)=>{
         script: "js/cart.js"
     })
 })
+viewsRouter.get('/purchase', async (req, res)=>{
+    res.render('purchase', {
+        script: "js/purchase.js"
+    })
+})
 
 export default viewsRouter

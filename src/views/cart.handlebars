@@ -1,4 +1,4 @@
-<div class="chat" style="display: grid; grid-template-rows: auto auto 30px; min-height: 100vh">
+<div class="container" style="display: grid; grid-template-rows: auto auto 30px; min-height: 100vh">
     <div class="nav" style="display: flex; justify-content: space-between">
         <div class="logout-btn">
             <a href="/api/session/logout" style="color: #fff; text-decoration: none">Logout</a>
@@ -7,11 +7,11 @@
             <a href="/static/home" style="color: #fff; text-decoration: none">Home</a>
         </div>
     </div>
-    <div class="cart-products" style="overflow-y: scroll; margin-bottom: 1rem">
+    <div class="cart-products" style="margin-bottom: 1rem">
 
     </div>
     <div class="cart-buttons" style="display: flex; justify-content: space-between;">
-        <button>Clear Cart</button>
-        <button>Buy now</button>
+        <button class="clearCartBtn" style="padding: 4px; font-size: 16px">Clear Cart</button>
+        <a href="/static/purchase"><button style="font-size: 16px; padding: 4px">Buy now</button></a>
     </div>
 </div>
