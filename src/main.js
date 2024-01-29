@@ -29,7 +29,7 @@ import SwaggerUiExpress from 'swagger-ui-express'
 const PORT = 8080;
 const app = express()
 
-mongoose.connect('mongodb+srv://martinbtt:wq8rxlJedZ8rear9@cluster0.enkcdiq.mongodb.net/?retryWrites=true&w=majority')
+mongoose.connect(process.env.MONGO_URL)
 .then( async ()=>{ console.log('DB Connected') })
 .catch((error)=>{ console.log(error) })
 
